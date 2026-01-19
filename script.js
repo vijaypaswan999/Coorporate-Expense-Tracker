@@ -1,113 +1,79 @@
-const API = "http://localhost:3000";
+let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
-// View Switch
-function showRegister(){
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("registerBox").style.display="block";
-}
-function showLogin(){
-  document.getElementById("registerBox").style.display="none";
-  document.getElementById("loginBox").style.display="block";
-}
-function showReport(){
-  document.getElementById("appBox").style.display="none";
-  document.getElementById("listBox").style.display="none";
-  document.getElementById("reportBox").style.display="block";
-  loadReport();
-}
-function backToApp(){
-  document.getElementById("reportBox").style.display="none";
-  document.getElementById("appBox").style.display="block";
-  document.getElementById("listBox").style.display="block";
-}
+// Login
+document.getElementById('loginForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  const email = emailInput.value;
+  const password = passwordInput.value;
 
-// Register
-async function register(){
-  const email = document.getElementById("regEmail").value.trim();
-  const password = document.getElementById("regPass").value.trim();
-
-  if(!email || !password){
-    alert("Fill all fields!");
+  if(!email.includes("@")){
+    errorMessage.textContent = "Enter valid email!";
+    return;
+  }
+  if(password.length < 6){
+    errorMessage.textContent = "Password must be 6+ characters!";
     return;
   }
 
-  try{
-    const res = await fetch(API+"/register",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({email,password})
-    });
+  errorMessage.textContent = "";
+  loginSection.classList.add("hidden");
+  dashboardSection.classList.remove("hidden");
+  renderExpenses();
+});
 
-    if(res.ok){
-      alert("Registration Successful!");
-      showLogin();
-    } else {
-      alert("Registration Failed!");
-    }
-  } catch(e){
-    alert("Server not running!");
-  }
-}
+// Logout
+logoutBtn.addEventListener("click", ()=>{
+  dashboardSection.classList.add("hidden");
+  loginSection.classList.remove("hidden");
+  loginForm.reset();
+});
 
-// Login
-async function login(){
-  const email = document.getElementById("loginEmail").value.trim();
-  const password = document.getElementById("loginPass").value.trim();
+// Add Expense
+expenseForm.addEventListener("submit", function(e){
+  e.preventDefault();
+  const exp = {
+    id: Date.now(),
+    date: date.value,
+    category: category.value,
+    amount: parseFloat(amount.value),
+    description: description.value
+  };
+  expenses.push(exp);
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  renderExpenses();
+  expenseForm.reset();
+});
 
-  const res = await fetch(API+"/login",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({email,password})
-  });
-  const result = await res.json();
-
-  if(result.success){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("appBox").style.display="block";
-    document.getElementById("listBox").style.display="block";
-    loadExpenses();
-  } else {
-    alert("Invalid Login!");
-  }
-}
-
-// Expense
-async function addExpense(){
-  await fetch(API+"/add-expense",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      employee_name: document.getElementById("name").value,
-      category: document.getElementById("category").value,
-      amount: document.getElementById("amount").value,
-      expense_date: document.getElementById("date").value,
-      description: document.getElementById("desc").value
-    })
-  });
-  loadExpenses();
-}
-
-// Load Expenses
-async function loadExpenses(){
-  const res = await fetch(API+"/expenses");
-  const data = await res.json();
-  const list = document.getElementById("list");
-  list.innerHTML="";
-
-  data.forEach(e=>{
-    list.innerHTML += `<li>${e.employee_name} - ₹${e.amount} (${e.category})</li>`;
+// Render Table
+function renderExpenses(){
+  expensesBody.innerHTML="";
+  expenses.forEach(e=>{
+    expensesBody.innerHTML += `
+      <tr>
+        <td>${e.date}</td>
+        <td>${e.category}</td>
+        <td>$${e.amount.toFixed(2)}</td>
+        <td>${e.description}</td>
+        <td><button class="delete-btn" onclick="deleteExpense(${e.id})">Delete</button></td>
+      </tr>
+    `;
   });
 }
 
-// Report
-async function loadReport(){
-  const res = await fetch(API+"/expenses");
-  const data = await res.json();
-  const reportList = document.getElementById("reportList");
-  reportList.innerHTML="";
-
-  data.forEach(e=>{
-    reportList.innerHTML += `<li>${e.employee_name} - ₹${e.amount} (${e.category})</li>`;
-  });
+// Delete
+function deleteExpense(id){
+  expenses = expenses.filter(e=>e.id!==id);
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  renderExpenses();
 }
+
+// Element Shortcuts
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const errorMessage = document.getElementById("errorMessage");
+const loginSection = document.getElementById("loginSection");
+const dashboardSection = document.getElementById("dashboardSection");
+const logoutBtn = document.getElementById("logoutBtn");
+const expenseForm = document.getElementById("expenseForm");
+const expensesBody = document.getElementById("expensesBody");
 
