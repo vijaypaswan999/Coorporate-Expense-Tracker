@@ -2,55 +2,69 @@ const API = "http://localhost:3000";
 
 // View Switch
 function showRegister(){
-  loginBox.style.display="none";
-  registerBox.style.display="block";
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("registerBox").style.display="block";
 }
 function showLogin(){
-  registerBox.style.display="none";
-  loginBox.style.display="block";
+  document.getElementById("registerBox").style.display="none";
+  document.getElementById("loginBox").style.display="block";
 }
 function showReport(){
-  appBox.style.display="none";
-  listBox.style.display="none";
-  reportBox.style.display="block";
+  document.getElementById("appBox").style.display="none";
+  document.getElementById("listBox").style.display="none";
+  document.getElementById("reportBox").style.display="block";
   loadReport();
 }
 function backToApp(){
-  reportBox.style.display="none";
-  appBox.style.display="block";
-  listBox.style.display="block";
+  document.getElementById("reportBox").style.display="none";
+  document.getElementById("appBox").style.display="block";
+  document.getElementById("listBox").style.display="block";
 }
 
 // Register
 async function register(){
-  const email = regEmail.value.trim();
-  const password = regPass.value.trim();
-  if(!email || !password){ alert("Fill all fields"); return; }
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPass").value.trim();
 
-  await fetch(API+"/register",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({email,password})
-  });
-  alert("Registered Successfully!");
-  showLogin();
+  if(!email || !password){
+    alert("Fill all fields!");
+    return;
+  }
+
+  try{
+    const res = await fetch(API+"/register",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({email,password})
+    });
+
+    if(res.ok){
+      alert("Registration Successful!");
+      showLogin();
+    } else {
+      alert("Registration Failed!");
+    }
+  } catch(e){
+    alert("Server not running!");
+  }
 }
 
 // Login
 async function login(){
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPass").value.trim();
+
   const res = await fetch(API+"/login",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({
-      email: loginEmail.value,
-      password: loginPass.value
-    })
+    body:JSON.stringify({email,password})
   });
   const result = await res.json();
+
   if(result.success){
-    loginBox.style.display="none";
-    appBox.style.display="block";
-    listBox.style.display="block";
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("appBox").style.display="block";
+    document.getElementById("listBox").style.display="block";
     loadExpenses();
   } else {
     alert("Invalid Login!");
@@ -63,11 +77,11 @@ async function addExpense(){
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({
-      employee_name:name.value,
-      category:category.value,
-      amount:amount.value,
-      expense_date:date.value,
-      description:desc.value
+      employee_name: document.getElementById("name").value,
+      category: document.getElementById("category").value,
+      amount: document.getElementById("amount").value,
+      expense_date: document.getElementById("date").value,
+      description: document.getElementById("desc").value
     })
   });
   loadExpenses();
@@ -77,7 +91,9 @@ async function addExpense(){
 async function loadExpenses(){
   const res = await fetch(API+"/expenses");
   const data = await res.json();
+  const list = document.getElementById("list");
   list.innerHTML="";
+
   data.forEach(e=>{
     list.innerHTML += `<li>${e.employee_name} - ₹${e.amount} (${e.category})</li>`;
   });
@@ -87,7 +103,9 @@ async function loadExpenses(){
 async function loadReport(){
   const res = await fetch(API+"/expenses");
   const data = await res.json();
+  const reportList = document.getElementById("reportList");
   reportList.innerHTML="";
+
   data.forEach(e=>{
     reportList.innerHTML += `<li>${e.employee_name} - ₹${e.amount} (${e.category})</li>`;
   });
