@@ -1,56 +1,61 @@
 body {
-    font-family: Arial, sans-serif;
-    background: #f0f4ff;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
-.login-box, .container {
-    width: 320px;
-    margin: 100px auto;
-    padding: 20px;
-    background: white;
-    text-align: center;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+.card {
+  background: #fff;
+  padding: 20px 30px;
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  width: 300px;
 }
 
 h2 {
-    color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-input {
-    width: 90%;
-    padding: 8px;
-    margin: 8px 0;
+input, textarea, button {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 8px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 button {
-    width: 95%;
-    padding: 10px;
-    background: #4a69bd;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
 button:hover {
-    background: #3b55a0;
+  background-color: #0056b3;
+}
+
+a {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 ul {
-    list-style: none;
-    padding: 0;
+  list-style-type: none;
+  padding-left: 0;
 }
 
 li {
-    background: #ecf0f1;
-    margin: 5px;
-    padding: 8px;
-    border-radius: 5px;
-}
-
-#msg {
-    color: red;
+  padding: 8px 5px;
+  border-bottom: 1px solid #ccc;
 }
