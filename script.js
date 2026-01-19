@@ -71,3 +71,4 @@ async function loadExpenses(){
     list.innerHTML += `<li>${e.employee_name} - ₹${e.amount} (${e.category})</li>`;
   });
 }
+
