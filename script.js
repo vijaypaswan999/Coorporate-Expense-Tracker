@@ -1,79 +1,34 @@
-let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+function login() {
+    let user = document.getElementById("username").value;
+    let pass = document.getElementById("password").value;
 
-// Login
-document.getElementById('loginForm').addEventListener('submit', function(e){
-  e.preventDefault();
-  const email = emailInput.value;
-  const password = passwordInput.value;
-
-  if(!email.includes("@")){
-    errorMessage.textContent = "Enter valid email!";
-    return;
-  }
-  if(password.length < 6){
-    errorMessage.textContent = "Password must be 6+ characters!";
-    return;
-  }
-
-  errorMessage.textContent = "";
-  loginSection.classList.add("hidden");
-  dashboardSection.classList.remove("hidden");
-  renderExpenses();
-});
-
-// Logout
-logoutBtn.addEventListener("click", ()=>{
-  dashboardSection.classList.add("hidden");
-  loginSection.classList.remove("hidden");
-  loginForm.reset();
-});
-
-// Add Expense
-expenseForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  const exp = {
-    id: Date.now(),
-    date: date.value,
-    category: category.value,
-    amount: parseFloat(amount.value),
-    description: description.value
-  };
-  expenses.push(exp);
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
-  expenseForm.reset();
-});
-
-// Render Table
-function renderExpenses(){
-  expensesBody.innerHTML="";
-  expenses.forEach(e=>{
-    expensesBody.innerHTML += `
-      <tr>
-        <td>${e.date}</td>
-        <td>${e.category}</td>
-        <td>$${e.amount.toFixed(2)}</td>
-        <td>${e.description}</td>
-        <td><button class="delete-btn" onclick="deleteExpense(${e.id})">Delete</button></td>
-      </tr>
-    `;
-  });
+    if (user === "admin" && pass === "123") {
+        window.location.href = "dashboard.html";
+    } else {
+        document.getElementById("msg").innerText = "Invalid Username or Password!";
+    }
 }
 
-// Delete
-function deleteExpense(id){
-  expenses = expenses.filter(e=>e.id!==id);
-  localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
+let total = 0;
+
+function addExpense() {
+    let title = document.getElementById("title").value;
+    let amount = document.getElementById("amount").value;
+
+    if (title === "" || amount === "") {
+        alert("Please enter expense details");
+        return;
+    }
+
+    let list = document.getElementById("list");
+    let li = document.createElement("li");
+    li.innerText = title + " - ₹" + amount;
+
+    list.appendChild(li);
+
+    total += parseInt(amount);
+    document.getElementById("total").innerText = total;
+
+    document.getElementById("title").value = "";
+    document.getElementById("amount").value = "";
 }
-
-// Element Shortcuts
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const errorMessage = document.getElementById("errorMessage");
-const loginSection = document.getElementById("loginSection");
-const dashboardSection = document.getElementById("dashboardSection");
-const logoutBtn = document.getElementById("logoutBtn");
-const expenseForm = document.getElementById("expenseForm");
-const expensesBody = document.getElementById("expensesBody");
-
