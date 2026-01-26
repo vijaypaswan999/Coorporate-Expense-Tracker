@@ -21,12 +21,16 @@
   <input id="regEmail" type="email" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
   <button onclick="register()">Register</button>
+  <p id="regMsg" style="text-align:center;"></p>
   <p>Already have account? <a onclick="showLogin()">Login</a></p>
 </div>
 
 <!-- EXPENSE -->
 <div class="card" id="appBox" style="display:none;">
   <h2>Add Expense</h2>
+
+  <button class="logout-btn" onclick="logout()">Logout</button>
+
   <input id="name" placeholder="Employee Name">
   <input id="category" placeholder="Category">
   <input id="amount" type="number" placeholder="Amount">
@@ -35,6 +39,7 @@
   <button onclick="addExpense()">Add Expense</button>
 </div>
 
+<!-- LIST -->
 <div class="card" id="listBox" style="display:none;">
   <h2>Expenses</h2>
   <ul id="list"></ul>
@@ -50,4 +55,4 @@
 
 <script src="script.js"></script>
 </body>
-</html>  
+</html>
