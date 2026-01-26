@@ -23,12 +23,15 @@ body {
 }
 
 .logout-btn {
-  background: #dc3545;
-  border: none;
-  color: white;
-  padding: 0px 5px;
-  border-radius: 0.5px;
-  cursor: pointer;
+background: #dc3545;
+border: none;
+color: white;
+padding: 2px 8px; /* SMALL size */
+font-size: 12px; /* smaller text */
+border-radius: 3px; /* subtle round */
+cursor: pointer;
+line-height: 1.2;
+
 }
 
 .logout-btn:hover {
