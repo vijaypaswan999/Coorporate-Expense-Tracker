@@ -27,7 +27,7 @@ background: #dc3545;
 border: none;
 color: white;
 padding: 0.5px 0.20px; /* SMALL size */
-font-size: 5px; /* smaller text */
+font-size: 1px; /* smaller text */
 border-radius: 3px; /* subtle round */
 cursor: pointer;
 line-height: 1.2;
