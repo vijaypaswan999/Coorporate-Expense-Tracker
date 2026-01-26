@@ -6,8 +6,8 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
-<div id="navbar" style="display:none;">
+<!-- TOP NAVIGATION BAR -->
+<div id="navbar">
   <span id="navUser"></span>
   <button class="logout-btn" onclick="logout()">Logout</button>
 </div>
@@ -28,7 +28,7 @@
   <p>New Employee? <a onclick="showRegister()">Register</a></p>
 </div>
 
-<!-- REGISTER (EMPLOYEE ONLY) -->
+<!-- REGISTER -->
 <div class="card" id="registerBox" style="display:none;">
   <h2>Employee Register</h2>
   <input id="regEmail" type="email" placeholder="Email">
@@ -41,7 +41,7 @@
 <!-- EMPLOYEE PANEL -->
 <div class="card" id="employeeBox" style="display:none;">
   <h2>Add Expense</h2>
-  <input id="name" placeholder="Employee Name">
+  <input id="empName" placeholder="Employee Name">
   <input id="category" placeholder="Category">
   <input id="amount" type="number" placeholder="Amount">
   <input id="date" type="date">
@@ -50,7 +50,7 @@
 
 <!-- ADMIN PANEL -->
 <div class="card" id="adminBox" style="display:none;">
-  <h2>Admin Expense Approval</h2>
+  <h2>Expense Approval</h2>
   <ul id="adminList"></ul>
 </div>
 
