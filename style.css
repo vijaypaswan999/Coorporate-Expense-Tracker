@@ -14,9 +14,9 @@ body {
   height: 60px;
   background: #343a40;
   color: white;
-  display: none;
+  display: flex;
   justify-content: space-between;
-  align-items: none;
+  align-items: flex;
   padding: 0 10px;
   box-sizing: border-box;
 }
