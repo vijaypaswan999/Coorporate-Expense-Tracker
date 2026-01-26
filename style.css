@@ -6,38 +6,35 @@ body {
 }
 
 /* NAVBAR */
+/* NAVBAR */
 #navbar {
   position: fixed;
   top: 0;
-  left: 0;
+  right: 0;
   width: 100%;
-  height: 50px;
+  height: 45px;
   background: #343a40;
-  color: white;
-  display: none;
+  display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 10px;
   box-sizing: border-box;
-  z-index: 1000;
 }
 
+/* SMALL LOGOUT BUTTON */
 .logout-btn {
-background: #dc3545;
-border: none;
-color: white;
-padding: 0.5px 0.20px; /* SMALL size */
-font-size: 1px; /* smaller text */
-border-radius: 3px; /* subtle round */
-cursor: pointer;
-line-height: 1.2;
-
+  background: #dc3545;
+  border: none;
+  color: white;
+  padding: 2px 6px;     /* VERY SMALL */
+  font-size: 11px;     /* small text */
+  border-radius: 3px;
+  cursor: pointer;
 }
 
 .logout-btn:hover {
   background: #b52a37;
 }
-
 .card {
   background: #fff;
   padding: 20px;
