@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Expense Management System</title>
+  <meta charset="UTF-8">
+  <title>Corporate Expense Tracker</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- NAVBAR (hidden before login) -->
 <div id="navbar">
   <span id="navUser"></span>
   <button class="logout-btn" onclick="logout()">Logout</button>
@@ -15,50 +16,45 @@
 <!-- LOGIN -->
 <div class="card" id="loginBox">
   <h2>Login</h2>
-
-  <select id="loginType">
-    <option value="employee">Employee Login</option>
-    <option value="admin">Admin Login</option>
-  </select>
-
   <input id="loginEmail" type="email" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
 
-  <p>New User? <a onclick="showRegister()">Register</a></p>
+  <select id="loginRole">
+    <option value="employee">Employee</option>
+    <option value="admin">Admin</option>
+  </select>
+
+  <button onclick="login()">Login</button>
+  <p>New user? <a onclick="showRegister()">Register</a></p>
 </div>
 
 <!-- REGISTER -->
 <div class="card" id="registerBox" style="display:none;">
   <h2>Register</h2>
+  <input id="regEmail" type="email" placeholder="Email">
+  <input id="regPass" type="password" placeholder="Password">
 
   <select id="regRole">
     <option value="employee">Employee</option>
     <option value="admin">Admin</option>
   </select>
 
-  <input id="regEmail" type="email" placeholder="Email">
-  <input id="regPass" type="password" placeholder="Password">
   <button onclick="register()">Register</button>
-
-  <p id="regMsg"></p>
   <p><a onclick="showLogin()">Back to Login</a></p>
 </div>
 
-<!-- EMPLOYEE PANEL -->
+<!-- EMPLOYEE DASHBOARD -->
 <div class="card" id="employeeBox" style="display:none;">
-  <h2>Add Expense</h2>
-  <input id="empName" placeholder="Employee Name">
-  <input id="category" placeholder="Category">
-  <input id="amount" type="number" placeholder="Amount">
-  <input id="date" type="date">
-  <button onclick="addExpense()">Submit Expense</button>
+  <h2>Submit Expense</h2>
+  <input id="expTitle" placeholder="Expense Title">
+  <input id="expAmount" type="number" placeholder="Amount">
+  <button onclick="addExpense()">Submit</button>
 </div>
 
-<!-- ADMIN PANEL -->
+<!-- ADMIN DASHBOARD -->
 <div class="card" id="adminBox" style="display:none;">
-  <h2>Expense Approval</h2>
-  <ul id="adminList"></ul>
+  <h2>Expense Records</h2>
+  <ul id="expenseList"></ul>
 </div>
 
 <script src="script.js"></script>
