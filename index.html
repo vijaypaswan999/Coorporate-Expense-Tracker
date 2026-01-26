@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<!-- TOP NAVIGATION BAR -->
+<!-- NAVBAR -->
 <div id="navbar">
   <span id="navUser"></span>
   <button class="logout-btn" onclick="logout()">Logout</button>
@@ -25,15 +25,22 @@
   <input id="loginPass" type="password" placeholder="Password">
   <button onclick="login()">Login</button>
 
-  <p>New Employee? <a onclick="showRegister()">Register</a></p>
+  <p>New User? <a onclick="showRegister()">Register</a></p>
 </div>
 
 <!-- REGISTER -->
 <div class="card" id="registerBox" style="display:none;">
-  <h2>Employee Register</h2>
+  <h2>Register</h2>
+
+  <select id="regRole">
+    <option value="employee">Employee</option>
+    <option value="admin">Admin</option>
+  </select>
+
   <input id="regEmail" type="email" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
   <button onclick="register()">Register</button>
+
   <p id="regMsg"></p>
   <p><a onclick="showLogin()">Back to Login</a></p>
 </div>
