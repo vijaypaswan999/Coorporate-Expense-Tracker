@@ -1,33 +1,16 @@
-// ===== ELEMENT REFERENCES (CRITICAL FIX) =====
+const users = JSON.parse(localStorage.getItem("users")) || [];
+const expenses = JSON.parse(localStorage.getItem("expenses")) || [];
+let currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+const navbar = document.getElementById("navbar");
+const navUser = document.getElementById("navUser");
+
 const loginBox = document.getElementById("loginBox");
 const registerBox = document.getElementById("registerBox");
 const employeeBox = document.getElementById("employeeBox");
 const adminBox = document.getElementById("adminBox");
-const navbar = document.getElementById("navbar");
-const navUser = document.getElementById("navUser");
 
-const loginEmail = document.getElementById("loginEmail");
-const loginPass = document.getElementById("loginPass");
-const loginType = document.getElementById("loginType");
-
-const regEmail = document.getElementById("regEmail");
-const regPass = document.getElementById("regPass");
-const regRole = document.getElementById("regRole");
-const regMsg = document.getElementById("regMsg");
-
-const empName = document.getElementById("empName");
-const category = document.getElementById("category");
-const amount = document.getElementById("amount");
-const date = document.getElementById("date");
-
-const adminList = document.getElementById("adminList");
-
-// ===== STORAGE =====
-let users = JSON.parse(localStorage.getItem("users")) || [];
-let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
-let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
-
-// ===== NAV FUNCTIONS =====
+/* NAVIGATION */
 function showRegister() {
   loginBox.style.display = "none";
   registerBox.style.display = "block";
@@ -38,61 +21,60 @@ function showLogin() {
   loginBox.style.display = "block";
 }
 
-// ===== REGISTER =====
+/* REGISTER */
 function register() {
-  if (users.find(u => u.email === regEmail.value)) {
-    regMsg.textContent = "User already exists!";
-    regMsg.style.color = "red";
-    return;
-  }
+  const email = regEmail.value;
+  const pass = regPass.value;
+  const role = regRole.value;
 
-  users.push({
-    email: regEmail.value,
-    pass: regPass.value,
-    role: regRole.value
-  });
-
+  users.push({ email, pass, role });
   localStorage.setItem("users", JSON.stringify(users));
-  regMsg.textContent = "Registration successful!";
-  regMsg.style.color = "green";
+
+  alert("Registration successful!");
+  showLogin();
 }
 
-// ===== LOGIN =====
+/* LOGIN */
 function login() {
-  const user = users.find(
-    u =>
-      u.email === loginEmail.value &&
-      u.pass === loginPass.value &&
-      u.role === loginType.value
-  );
+  const email = loginEmail.value;
+  const pass = loginPass.value;
+  const role = loginRole.value;
+
+  const user = users.find(u => u.email === email && u.pass === pass && u.role === role);
 
   if (!user) {
-    alert("Invalid login credentials");
+    alert("Invalid credentials");
     return;
   }
 
   currentUser = user;
   localStorage.setItem("currentUser", JSON.stringify(user));
 
-  loginType.value === "admin" ? showAdmin() : showEmployee();
+  navbar.style.display = "flex";
+  navUser.textContent = role === "admin" ? "Admin Panel" : "Employee: " + email;
+
+  loginBox.style.display = "none";
+
+  role === "admin" ? showAdmin() : showEmployee();
 }
 
-// ===== EMPLOYEE =====
+/* DASHBOARDS */
 function showEmployee() {
-  loginBox.style.display = "none";
   employeeBox.style.display = "block";
   adminBox.style.display = "none";
-  navbar.style.display = "flex";
-  navUser.textContent = "Employee: " + currentUser.email;
 }
 
+function showAdmin() {
+  adminBox.style.display = "block";
+  employeeBox.style.display = "none";
+  loadExpenses();
+}
+
+/* EXPENSE */
 function addExpense() {
   expenses.push({
-    user: currentUser.email,
-    name: empName.value,
-    category: category.value,
-    amount: amount.value,
-    date: date.value,
+    title: expTitle.value,
+    amount: expAmount.value,
     status: "Pending"
   });
 
@@ -100,47 +82,42 @@ function addExpense() {
   alert("Expense submitted");
 }
 
-// ===== ADMIN =====
-function showAdmin() {
-  loginBox.style.display = "none";
-  adminBox.style.display = "block";
-  employeeBox.style.display = "none";
-  navbar.style.display = "flex";
-  navUser.textContent = "Admin Panel";
-  renderAdminExpenses();
-}
-
-function renderAdminExpenses() {
-  adminList.innerHTML = "";
+function loadExpenses() {
+  const list = document.getElementById("expenseList");
+  list.innerHTML = "";
 
   expenses.forEach((e, i) => {
-    const li = document.createElement("li");
-    li.innerHTML = `
-      <b>${e.user}</b><br>
-      ₹${e.amount} | ${e.category}<br>
-      Status: <b>${e.status}</b><br>
-      <button onclick="updateStatus(${i}, 'Accepted')">Accept</button>
-      <button onclick="updateStatus(${i}, 'Rejected')">Reject</button>
-    `;
-    adminList.appendChild(li);
+    list.innerHTML += `
+      <li>
+        ${e.title} - ₹${e.amount} - ${e.status}
+        <br>
+        <button onclick="updateStatus(${i}, 'Approved')">Accept</button>
+        <button onclick="updateStatus(${i}, 'Rejected')">Reject</button>
+      </li>`;
   });
 }
 
-function updateStatus(index, status) {
-  expenses[index].status = status;
+function updateStatus(i, status) {
+  expenses[i].status = status;
   localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderAdminExpenses();
+  loadExpenses();
 }
 
-// ===== LOGOUT =====
+/* LOGOUT */
 function logout() {
   localStorage.removeItem("currentUser");
   location.reload();
 }
 
-// ===== AUTO LOGIN =====
+/* AUTO LOGIN */
 window.onload = () => {
   if (currentUser) {
+    navbar.style.display = "flex";
+    navUser.textContent = currentUser.role === "admin"
+      ? "Admin Panel"
+      : "Employee: " + currentUser.email;
+
     currentUser.role === "admin" ? showAdmin() : showEmployee();
+    loginBox.style.display = "none";
   }
 };
