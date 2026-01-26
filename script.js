@@ -1,7 +1,33 @@
+// ===== ELEMENT REFERENCES (CRITICAL FIX) =====
+const loginBox = document.getElementById("loginBox");
+const registerBox = document.getElementById("registerBox");
+const employeeBox = document.getElementById("employeeBox");
+const adminBox = document.getElementById("adminBox");
+const navbar = document.getElementById("navbar");
+const navUser = document.getElementById("navUser");
+
+const loginEmail = document.getElementById("loginEmail");
+const loginPass = document.getElementById("loginPass");
+const loginType = document.getElementById("loginType");
+
+const regEmail = document.getElementById("regEmail");
+const regPass = document.getElementById("regPass");
+const regRole = document.getElementById("regRole");
+const regMsg = document.getElementById("regMsg");
+
+const empName = document.getElementById("empName");
+const category = document.getElementById("category");
+const amount = document.getElementById("amount");
+const date = document.getElementById("date");
+
+const adminList = document.getElementById("adminList");
+
+// ===== STORAGE =====
 let users = JSON.parse(localStorage.getItem("users")) || [];
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
+// ===== NAV FUNCTIONS =====
 function showRegister() {
   loginBox.style.display = "none";
   registerBox.style.display = "block";
@@ -12,57 +38,52 @@ function showLogin() {
   loginBox.style.display = "block";
 }
 
+// ===== REGISTER =====
 function register() {
-  const email = regEmail.value;
-  const pass = regPass.value;
-  const role = regRole.value;
-
-  if (users.find(u => u.email === email)) {
+  if (users.find(u => u.email === regEmail.value)) {
     regMsg.textContent = "User already exists!";
     regMsg.style.color = "red";
     return;
   }
 
-  users.push({ email, pass, role });
-  localStorage.setItem("users", JSON.stringify(users));
+  users.push({
+    email: regEmail.value,
+    pass: regPass.value,
+    role: regRole.value
+  });
 
+  localStorage.setItem("users", JSON.stringify(users));
   regMsg.textContent = "Registration successful!";
   regMsg.style.color = "green";
 }
 
+// ===== LOGIN =====
 function login() {
-  const email = loginEmail.value;
-  const pass = loginPass.value;
-  const type = loginType.value;
-
   const user = users.find(
-    u => u.email === email && u.pass === pass && u.role === type
+    u =>
+      u.email === loginEmail.value &&
+      u.pass === loginPass.value &&
+      u.role === loginType.value
   );
 
   if (!user) {
-    alert("Invalid credentials");
+    alert("Invalid login credentials");
     return;
   }
 
   currentUser = user;
   localStorage.setItem("currentUser", JSON.stringify(user));
 
-  type === "admin" ? showAdmin() : showEmployee();
+  loginType.value === "admin" ? showAdmin() : showEmployee();
 }
 
+// ===== EMPLOYEE =====
 function showEmployee() {
   loginBox.style.display = "none";
   employeeBox.style.display = "block";
+  adminBox.style.display = "none";
   navbar.style.display = "flex";
   navUser.textContent = "Employee: " + currentUser.email;
-}
-
-function showAdmin() {
-  loginBox.style.display = "none";
-  adminBox.style.display = "block";
-  navbar.style.display = "flex";
-  navUser.textContent = "Admin Panel";
-  renderAdminExpenses();
 }
 
 function addExpense() {
@@ -77,6 +98,16 @@ function addExpense() {
 
   localStorage.setItem("expenses", JSON.stringify(expenses));
   alert("Expense submitted");
+}
+
+// ===== ADMIN =====
+function showAdmin() {
+  loginBox.style.display = "none";
+  adminBox.style.display = "block";
+  employeeBox.style.display = "none";
+  navbar.style.display = "flex";
+  navUser.textContent = "Admin Panel";
+  renderAdminExpenses();
 }
 
 function renderAdminExpenses() {
@@ -101,13 +132,13 @@ function updateStatus(index, status) {
   renderAdminExpenses();
 }
 
+// ===== LOGOUT =====
 function logout() {
   localStorage.removeItem("currentUser");
-  navbar.style.display = "none";
   location.reload();
 }
 
-/* AUTO LOGIN */
+// ===== AUTO LOGIN =====
 window.onload = () => {
   if (currentUser) {
     currentUser.role === "admin" ? showAdmin() : showEmployee();
