@@ -2,145 +2,97 @@ let users = JSON.parse(localStorage.getItem("users")) || [];
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
+// Default Admin
+if (!localStorage.getItem("admin")) {
+  localStorage.setItem("admin", JSON.stringify({email:"admin@corp.com", pass:"admin123"}));
+}
+
 function showRegister() {
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("registerBox").style.display = "block";
+  loginBox.style.display = "none";
+  registerBox.style.display = "block";
 }
 
 function showLogin() {
-  document.getElementById("registerBox").style.display = "none";
-  document.getElementById("loginBox").style.display = "block";
+  registerBox.style.display = "none";
+  loginBox.style.display = "block";
 }
 
 function login() {
-  const email = document.getElementById("loginEmail").value;
-  const pass = document.getElementById("loginPass").value;
+  const type = loginType.value;
+  const email = loginEmail.value;
+  const pass = loginPass.value;
 
-  const user = users.find(u => u.email === email && u.pass === pass);
-  if (!user) {
-    alert("Invalid credentials!");
-    return;
+  if (type === "admin") {
+    const admin = JSON.parse(localStorage.getItem("admin"));
+    if (email !== admin.email || pass !== admin.pass) return alert("Invalid admin login");
+    currentUser = { email, role: "admin" };
+    showAdmin();
+  } else {
+    const user = users.find(u => u.email === email && u.pass === pass);
+    if (!user) return alert("Invalid employee login");
+    currentUser = { email, role: "employee" };
+    showEmployee();
   }
 
-  currentUser = user;
-  localStorage.setItem("currentUser", JSON.stringify(user));
-
-  document.getElementById("loginBox").style.display = "none";
-  document.getElementById("appBox").style.display = "block";
-  document.getElementById("listBox").style.display = "block";
-
-  renderExpenses();
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
 }
 
 function register() {
-  const email = document.getElementById("regEmail").value;
-  const pass = document.getElementById("regPass").value;
-  const msg = document.getElementById("regMsg");
-
-  if (users.find(u => u.email === email)) {
-    msg.style.color = "red";
-    msg.textContent = "User already exists!";
-    return;
-  }
-
-  users.push({ email, pass });
+  if (users.find(u => u.email === regEmail.value)) return alert("User exists");
+  users.push({ email: regEmail.value, pass: regPass.value });
   localStorage.setItem("users", JSON.stringify(users));
-
-  msg.style.color = "green";
-  msg.textContent = "Registration successful! Please login.";
-
-  document.getElementById("regEmail").value = "";
-  document.getElementById("regPass").value = "";
-
-  setTimeout(() => {
-    msg.textContent = "";
-    showLogin();
-  }, 1500);
+  regMsg.textContent = "Registration successful!";
 }
 
-function logout() {
-  currentUser = null;
-  localStorage.removeItem("currentUser");
+function showEmployee() {
+  loginBox.style.display = "none";
+  employeeBox.style.display = "block";
+  navbar.style.display = "flex";
+  navUser.textContent = "Employee: " + currentUser.email;
+}
 
-  document.getElementById("appBox").style.display = "none";
-  document.getElementById("listBox").style.display = "none";
-  document.getElementById("reportBox").style.display = "none";
-  document.getElementById("loginBox").style.display = "block";
+function showAdmin() {
+  loginBox.style.display = "none";
+  adminBox.style.display = "block";
+  navbar.style.display = "flex";
+  navUser.textContent = "Admin Panel";
+  renderAdminExpenses();
 }
 
 function addExpense() {
-  const name = document.getElementById("name").value;
-  const category = document.getElementById("category").value;
-  const amount = parseFloat(document.getElementById("amount").value);
-  const date = document.getElementById("date").value;
-  const desc = document.getElementById("desc").value;
-
-  if (!currentUser) {
-    alert("Please login first!");
-    return;
-  }
-
   expenses.push({
     user: currentUser.email,
     name,
     category,
-    amount,
-    date,
-    desc
+    amount: amount.value,
+    date: date.value,
+    status: "Pending"
   });
-
   localStorage.setItem("expenses", JSON.stringify(expenses));
-  renderExpenses();
+  alert("Expense submitted");
 }
 
-function renderExpenses() {
-  const list = document.getElementById("list");
-  list.innerHTML = "";
-
-  const userExp = expenses.filter(e => e.user === currentUser.email);
-  if (!userExp.length) {
-    list.innerHTML = "<li>No expenses yet.</li>";
-    return;
-  }
-
-  userExp.forEach(e => {
+function renderAdminExpenses() {
+  adminList.innerHTML = "";
+  expenses.forEach((e, i) => {
     const li = document.createElement("li");
-    li.textContent = `${e.date} - ${e.name} - ${e.category} - ₹${e.amount}`;
-    list.appendChild(li);
+    li.innerHTML = `
+      ${e.user} - ₹${e.amount} - <b>${e.status}</b>
+      <br>
+      <button onclick="updateStatus(${i}, 'Accepted')">Accept</button>
+      <button onclick="updateStatus(${i}, 'Rejected')">Reject</button>
+    `;
+    adminList.appendChild(li);
   });
 }
 
-function showReport() {
-  document.getElementById("appBox").style.display = "none";
-  document.getElementById("listBox").style.display = "none";
-  document.getElementById("reportBox").style.display = "block";
-
-  const reportList = document.getElementById("reportList");
-  reportList.innerHTML = "";
-
-  const userExp = expenses.filter(e => e.user === currentUser.email);
-  if (!userExp.length) {
-    reportList.innerHTML = "<li>No report</li>";
-    return;
-  }
-
-  const total = userExp.reduce((sum, e) => sum + e.amount, 0);
-  const li = document.createElement("li");
-  li.textContent = `Total Expense: ₹${total.toFixed(2)}`;
-  reportList.appendChild(li);
+function updateStatus(index, status) {
+  expenses[index].status = status;
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  renderAdminExpenses();
 }
 
-function backToApp() {
-  document.getElementById("reportBox").style.display = "none";
-  document.getElementById("appBox").style.display = "block";
-  document.getElementById("listBox").style.display = "block";
+function logout() {
+  localStorage.removeItem("currentUser");
+  location.reload();
 }
-
-window.onload = () => {
-  if (currentUser) {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("appBox").style.display = "block";
-    document.getElementById("listBox").style.display = "block";
-    renderExpenses();
-  }
-};
