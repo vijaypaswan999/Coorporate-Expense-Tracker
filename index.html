@@ -1,56 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Corporate Expense Tracker</title>
+  <title>Expense Management System</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- NAVBAR -->
+<div id="navbar" style="display:none;">
+  <span id="navUser"></span>
+  <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
 <!-- LOGIN -->
 <div class="card" id="loginBox">
   <h2>Login</h2>
+
+  <select id="loginType">
+    <option value="employee">Employee Login</option>
+    <option value="admin">Admin Login</option>
+  </select>
+
   <input id="loginEmail" type="email" placeholder="Email">
   <input id="loginPass" type="password" placeholder="Password">
   <button onclick="login()">Login</button>
-  <p>New User? <a onclick="showRegister()">Register</a></p>
+
+  <p>New Employee? <a onclick="showRegister()">Register</a></p>
 </div>
 
-<!-- REGISTER -->
+<!-- REGISTER (EMPLOYEE ONLY) -->
 <div class="card" id="registerBox" style="display:none;">
-  <h2>Register</h2>
+  <h2>Employee Register</h2>
   <input id="regEmail" type="email" placeholder="Email">
   <input id="regPass" type="password" placeholder="Password">
   <button onclick="register()">Register</button>
-  <p id="regMsg" style="text-align:center;"></p>
-  <p>Already have account? <a onclick="showLogin()">Login</a></p>
+  <p id="regMsg"></p>
+  <p><a onclick="showLogin()">Back to Login</a></p>
 </div>
 
-<!-- EXPENSE -->
-<div class="card" id="appBox" style="display:none;">
+<!-- EMPLOYEE PANEL -->
+<div class="card" id="employeeBox" style="display:none;">
   <h2>Add Expense</h2>
-
-  <button class="logout-btn" onclick="logout()">Logout</button>
-
   <input id="name" placeholder="Employee Name">
   <input id="category" placeholder="Category">
   <input id="amount" type="number" placeholder="Amount">
   <input id="date" type="date">
-  <textarea id="desc" placeholder="Description"></textarea>
-  <button onclick="addExpense()">Add Expense</button>
+  <button onclick="addExpense()">Submit Expense</button>
 </div>
 
-<!-- LIST -->
-<div class="card" id="listBox" style="display:none;">
-  <h2>Expenses</h2>
-  <ul id="list"></ul>
-  <button onclick="showReport()">View Company Report</button>
-</div>
-
-<!-- REPORT -->
-<div class="card" id="reportBox" style="display:none;">
-  <h2>Company Expense Report</h2>
-  <ul id="reportList"></ul>
-  <button onclick="backToApp()">Back</button>
+<!-- ADMIN PANEL -->
+<div class="card" id="adminBox" style="display:none;">
+  <h2>Admin Expense Approval</h2>
+  <ul id="adminList"></ul>
 </div>
 
 <script src="script.js"></script>
