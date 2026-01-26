@@ -2,14 +2,6 @@ let users = JSON.parse(localStorage.getItem("users")) || [];
 let expenses = JSON.parse(localStorage.getItem("expenses")) || [];
 let currentUser = JSON.parse(localStorage.getItem("currentUser")) || null;
 
-/* DEFAULT ADMIN */
-if (!localStorage.getItem("admin")) {
-  localStorage.setItem(
-    "admin",
-    JSON.stringify({ email: "admin@corp.com", pass: "admin123" })
-  );
-}
-
 function showRegister() {
   loginBox.style.display = "none";
   registerBox.style.display = "block";
@@ -20,44 +12,42 @@ function showLogin() {
   loginBox.style.display = "block";
 }
 
-function login() {
-  const type = loginType.value;
-  const email = loginEmail.value;
-  const pass = loginPass.value;
-
-  if (type === "admin") {
-    const admin = JSON.parse(localStorage.getItem("admin"));
-    if (email !== admin.email || pass !== admin.pass) {
-      alert("Invalid admin credentials");
-      return;
-    }
-    currentUser = { email, role: "admin" };
-    showAdmin();
-  } else {
-    const user = users.find(u => u.email === email && u.pass === pass);
-    if (!user) {
-      alert("Invalid employee credentials");
-      return;
-    }
-    currentUser = { email, role: "employee" };
-    showEmployee();
-  }
-
-  localStorage.setItem("currentUser", JSON.stringify(currentUser));
-}
-
 function register() {
-  if (users.find(u => u.email === regEmail.value)) {
+  const email = regEmail.value;
+  const pass = regPass.value;
+  const role = regRole.value;
+
+  if (users.find(u => u.email === email)) {
     regMsg.textContent = "User already exists!";
     regMsg.style.color = "red";
     return;
   }
 
-  users.push({ email: regEmail.value, pass: regPass.value });
+  users.push({ email, pass, role });
   localStorage.setItem("users", JSON.stringify(users));
 
   regMsg.textContent = "Registration successful!";
   regMsg.style.color = "green";
+}
+
+function login() {
+  const email = loginEmail.value;
+  const pass = loginPass.value;
+  const type = loginType.value;
+
+  const user = users.find(
+    u => u.email === email && u.pass === pass && u.role === type
+  );
+
+  if (!user) {
+    alert("Invalid credentials");
+    return;
+  }
+
+  currentUser = user;
+  localStorage.setItem("currentUser", JSON.stringify(user));
+
+  type === "admin" ? showAdmin() : showEmployee();
 }
 
 function showEmployee() {
@@ -86,7 +76,7 @@ function addExpense() {
   });
 
   localStorage.setItem("expenses", JSON.stringify(expenses));
-  alert("Expense submitted for approval");
+  alert("Expense submitted");
 }
 
 function renderAdminExpenses() {
