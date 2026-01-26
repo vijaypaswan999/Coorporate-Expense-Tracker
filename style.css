@@ -23,15 +23,10 @@ body {
 
 /* LOGOUT BUTTON (SMALL) */
 .logout-btn {
-  position: absolute;
-top: 8px;
-right: 10px;
   background: #dc3545;
   border: none;
   color: white;
   margin-right: auto;
-  padding-left: 2px;
-  padding-right: 2px;
   padding: 8px 5px;
   font-size: 1px;
   border-radius: 30px;
