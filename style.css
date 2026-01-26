@@ -13,7 +13,7 @@ body {
   margin: 10px;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 300px;
+  width: 320px;
 }
 
 h2 {
@@ -31,13 +31,22 @@ input, textarea, button {
 
 button {
   background-color: #007bff;
-  color: #fff;
+  color: white;
   border: none;
   cursor: pointer;
 }
 
 button:hover {
   background-color: #0056b3;
+}
+
+.logout-btn {
+  background-color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.logout-btn:hover {
+  background-color: #b52a37;
 }
 
 a {
