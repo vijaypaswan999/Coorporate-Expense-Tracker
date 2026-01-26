@@ -23,6 +23,9 @@ body {
 
 /* LOGOUT BUTTON (SMALL) */
 .logout-btn {
+  position: absolute;
+top: 8px;
+right: 10px;
   background: #dc3545;
   border: none;
   color: white;
