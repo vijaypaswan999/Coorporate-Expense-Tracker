@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f0f2f5;
   margin: 0;
-  padding-top: 60px; /* space for navbar */
+  padding-top: 60px;
 }
 
 /* NAVBAR */
@@ -12,7 +12,7 @@ body {
   left: 0;
   width: 100%;
   height: 50px;
-  background-color: #343a40;
+  background: #343a40;
   color: white;
   display: none;
   justify-content: space-between;
@@ -23,7 +23,7 @@ body {
 }
 
 .logout-btn {
-  background-color: #dc3545;
+  background: #dc3545;
   border: none;
   color: white;
   padding: 6px 12px;
@@ -32,7 +32,7 @@ body {
 }
 
 .logout-btn:hover {
-  background-color: #b52a37;
+  background: #b52a37;
 }
 
 .card {
@@ -51,7 +51,7 @@ input, select, button {
 }
 
 button {
-  background-color: #007bff;
+  background: #007bff;
   border: none;
   color: white;
   cursor: pointer;
