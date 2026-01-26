@@ -32,8 +32,9 @@ body {
   cursor: pointer;
 }
 
-.logout-btn:hover {
-  background: #b52a37;
+.logout-btn {
+  padding: 1px 5px;
+  font-size: 10px;
 }
 .card {
   background: #fff;
